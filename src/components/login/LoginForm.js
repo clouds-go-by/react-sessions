@@ -1,28 +1,67 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
+import Input from "../UI/input/Input";
+import styles from "./LoginForm.module.css";
 
 class LoginForm extends Component {
 
   state = {
-    emailInput: "a@a.a",
-    passwordInput: "123"
+    /*emailInput: "a@a.a",
+    passwordInput: "123",*/
+    formConfig: [{
+      id: "email",
+      type: "text",
+      placeholder: "Email",
+      value: "",
+      invalid: true,
+      changed: false
+    }, {
+      id: "password",
+      type: "password",
+      placeholder: "Password",
+      value: "",
+      invalid: true,
+      changed: false
+    }]
   };
 
-  emailInputChangeHandler = (event) => {
-    this.setState({ emailInput: event.target.value });
+  inputChangeHandler = (id, value) => {
+    const updatedFormConfig = [...this.state.formConfig];
+    let updatedFormItem = updatedFormConfig.find(item => item.id === id);
+    const itemIndex = updatedFormConfig.indexOf(updatedFormItem);
+
+    updatedFormItem = {
+      ...updatedFormConfig.find(item => item.id === id),
+      value,
+      changed: true,
+      invalid: !this.isFormFieldValid(updatedFormItem.id, value)
+    };
+
+    updatedFormConfig[itemIndex] = updatedFormItem;
+
+    this.setState({ formConfig: updatedFormConfig });
   };
 
-  passwordInputChangeHandler = (event) => {
-    this.setState({ passwordInput: event.target.value });
+  isFormFieldValid = (fieldId, value) => {
+    switch (fieldId) {
+      case "email":
+        //var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        //return re.test(String(value).toLowerCase());
+        return true;
+      case "password":
+        return value.length > 0;
+    }
   };
 
   handleLoginClick = () => {
+    console.log("handle login");
     axios.post("http://172.22.13.38:1323/users/login", {
-      email: this.state.emailInput,
-      password: this.state.passwordInput
+      email: this.state.formConfig[0].value,
+      password: this.state.formConfig[1].value
     })
       .then(response => {
+        console.log("success");
         localStorage.setItem("userID", response.data.id);
         this.props.history.push("/recipes");
       })
@@ -32,23 +71,20 @@ class LoginForm extends Component {
   };
 
   render() {
-    const { emailInput, passwordInput } = this.state;
+    const { formConfig } = this.state;
+
+    const isFormInvalid = !!formConfig.some(item => item.invalid);
 
     return (
-      <div>
+      <div className={styles.login}>
         <h3>Login</h3>
-        <div>
-          <div>Email</div>
-          <input value={emailInput} onChange={this.emailInputChangeHandler}/>
-        </div>
-        <div>
-          <div>Password</div>
-          <input type="password" value={passwordInput} onChange={this.passwordInputChangeHandler}/>
-        </div>
-        <button onClick={this.handleLoginClick}>Login</button>
-          <div>
-              <Link to="/register">Register</Link>
-          </div>
+        <form onSubmit={this.handleLoginClick}>
+          { formConfig.map(item =>
+            <Input key={item.id} {...item} onChange={this.inputChangeHandler}/>
+            ) }
+          <button disabled={isFormInvalid}>Login</button>
+          <div><Link to="/register">Register</Link></div>
+        </form>
       </div>
     );
   }

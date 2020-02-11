@@ -44,8 +44,8 @@ class RecipesWidget extends Component {
     axios.delete(`http://172.22.13.38:1323/recipes/${recipeId}`)
       .then(response => {
         const recipes = [...this.state.recipes];
-        const filteredReciped = recipes.filter(recipe => recipe.id !== recipeId);
-        this.setState({ recipes: filteredReciped });
+        const filteredRecipes = recipes.filter(recipe => recipe.id !== recipeId);
+        this.setState({ recipes: filteredRecipes });
       });
   };
 
