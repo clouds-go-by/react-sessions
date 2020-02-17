@@ -7,8 +7,6 @@ import styles from "./LoginForm.module.css";
 class LoginForm extends Component {
 
   state = {
-    /*emailInput: "a@a.a",
-    passwordInput: "123",*/
     formConfig: [{
       id: "email",
       type: "text",
@@ -78,11 +76,11 @@ class LoginForm extends Component {
     return (
       <div className={styles.login}>
         <h3>Login</h3>
-        <form onSubmit={this.handleLoginClick}>
+        <form>
           { formConfig.map(item =>
             <Input key={item.id} {...item} onChange={this.inputChangeHandler}/>
             ) }
-          <button disabled={isFormInvalid}>Login</button>
+          <button disabled={isFormInvalid} onClick={this.handleLoginClick}>Login</button>
           <div><Link to="/register">Register</Link></div>
         </form>
       </div>
