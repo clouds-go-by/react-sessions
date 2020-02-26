@@ -49,6 +49,8 @@ class LoginForm extends Component {
         return true;
       case "password":
         return value.length > 0;
+      default:
+        return true;
     }
   };
 
