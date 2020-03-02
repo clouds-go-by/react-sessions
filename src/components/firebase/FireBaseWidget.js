@@ -6,23 +6,25 @@ import {getCollection, getStorageRef} from "./FirebaseUtils";
 
 class FireBaseWidget extends Component {
 
+  initFormConfig = [{
+    id: "title",
+    type: "text",
+    placeholder: "Title",
+    value: ""
+  }, {
+    id: "description",
+    type: "text",
+    placeholder: "Description",
+    value: ""
+  }, {
+    id: "file",
+    type: "file",
+    value: "",
+    file: null
+  }];
+
   state = {
-    formConfig: [{
-      id: "title",
-      type: "text",
-      placeholder: "Title",
-      value: ""
-    }, {
-      id: "description",
-      type: "text",
-      placeholder: "Description",
-      value: ""
-    }, {
-      id: "file",
-      type: "file",
-      value: "",
-      file: null
-    }],
+    formConfig: this.initFormConfig,
     posts: null
   };
 
@@ -76,6 +78,7 @@ class FireBaseWidget extends Component {
       const storageFileRef = this.storageRef.child(`images/${file.name}-${Date.now()}`);
       storageFileRef.put(file).then(snapshot => {
         this.savePost(title, description, snapshot.metadata.fullPath);
+        this.setState({ formConfig: this.initFormConfig });
       });
     }
     else {
