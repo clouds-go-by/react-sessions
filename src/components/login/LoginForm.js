@@ -24,7 +24,7 @@ class LoginForm extends Component {
     }]
   };
 
-  inputChangeHandler = (id, value) => {
+  inputChangeHandler = (id, type, value) => {
     const updatedFormConfig = [...this.state.formConfig];
     let updatedFormItem = updatedFormConfig.find(item => item.id === id);
     const itemIndex = updatedFormConfig.indexOf(updatedFormItem);
