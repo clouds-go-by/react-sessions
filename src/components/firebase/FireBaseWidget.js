@@ -51,7 +51,7 @@ class FireBaseWidget extends Component {
     this.setState({posts});
   };
 
-  inputChangeHandler = (id, type, value, ref) => {
+  inputChangeHandler = (id, value, type, ref) => {
     const updatedFormConfig = [...this.state.formConfig];
     let updatedFormItem = updatedFormConfig.find(item => item.id === id);
     const itemIndex = updatedFormConfig.indexOf(updatedFormItem);
@@ -73,7 +73,7 @@ class FireBaseWidget extends Component {
     const file = this.state.formConfig[2].file;
 
     if (file) {
-      const storageFileRef = this.storageRef.child(`images/${file.name}`);
+      const storageFileRef = this.storageRef.child(`images/${file.name}-${Date.now()}`);
       storageFileRef.put(file).then(snapshot => {
         this.savePost(title, description, snapshot.metadata.fullPath);
       });

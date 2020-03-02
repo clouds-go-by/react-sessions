@@ -16,7 +16,7 @@ class Input extends Component {
                type={type}
                ref={this.input}
                className={classNames({[styles.error]: invalid && changed})}
-               onChange={(event) => onChange(id, type, event.target.value, this.input.current)}/>
+               onChange={(event) => onChange(id, event.target.value, type, this.input.current)}/>
       </div>
     );
   }

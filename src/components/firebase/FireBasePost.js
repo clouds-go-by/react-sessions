@@ -16,19 +16,26 @@ export class FireBasePost extends PureComponent {
 
   componentDidMount() {
     const { item } = this.props;
+    item.imageURL && this.loadImage(item.imageURL);
+  }
 
-    if (item.imageURL) {
-      this.setState({ loading: true });
-      this.storageRef.child(item.imageURL).getDownloadURL().then(url => {
-        this.setState({
-          url,
-          loading: false
-        });
-      }).catch(function(error) {
-        console.log("error loading image:", error);
-      });
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.props.item.imageURL && this.props.item.imageURL !== prevProps.item.imageURL) {
+      this.loadImage(this.props.item.imageURL);
     }
   }
+
+  loadImage = (imageURL) => {
+    this.setState({ loading: true });
+    this.storageRef.child(imageURL).getDownloadURL().then(url => {
+      this.setState({
+        url,
+        loading: false
+      });
+    }).catch(function(error) {
+      console.log("error loading image:", error);
+    });
+  };
 
   handleInputChange = (id, type, value, ref) => {
     this.props.onItemFileUpdate(this.props.item, ref.files[0]);

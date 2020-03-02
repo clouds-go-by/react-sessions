@@ -3,6 +3,7 @@ import axios from 'axios';
 import {Link} from 'react-router-dom';
 import Input from "../UI/input/Input";
 import styles from "./LoginForm.module.css";
+import {isFormFieldValid} from "../../utils/formsUtils";
 
 class LoginForm extends Component {
 
@@ -24,7 +25,7 @@ class LoginForm extends Component {
     }]
   };
 
-  inputChangeHandler = (id, type, value) => {
+  inputChangeHandler = (id, value) => {
     const updatedFormConfig = [...this.state.formConfig];
     let updatedFormItem = updatedFormConfig.find(item => item.id === id);
     const itemIndex = updatedFormConfig.indexOf(updatedFormItem);
@@ -33,25 +34,12 @@ class LoginForm extends Component {
       ...updatedFormConfig.find(item => item.id === id),
       value,
       changed: true,
-      invalid: !this.isFormFieldValid(updatedFormItem.id, value)
+      invalid: !isFormFieldValid(updatedFormItem.id, value)
     };
 
     updatedFormConfig[itemIndex] = updatedFormItem;
 
     this.setState({ formConfig: updatedFormConfig });
-  };
-
-  isFormFieldValid = (fieldId, value) => {
-    switch (fieldId) {
-      case "email":
-        //var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        //return re.test(String(value).toLowerCase());
-        return true;
-      case "password":
-        return value.length > 0;
-      default:
-        return true;
-    }
   };
 
   handleLoginClick = () => {
